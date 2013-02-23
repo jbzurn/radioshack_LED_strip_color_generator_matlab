@@ -1,4 +1,4 @@
-function colorname_code_generator(colorname,hex_color_string,n_lines)
+function colorname_code_generator(color_name,hex_color_string,n_lines)
 %draw a hex matrix to generate arduino code for radioshack LED strip
 %JB Zurn
 
@@ -12,8 +12,8 @@ function colorname_code_generator(colorname,hex_color_string,n_lines)
 %formatted color
 
 %example code:
-%colorname = 'this_color';
-%hex_color_string = '009B48';
+%color_name = 'green_003C00';
+%hex_color_string = '003C00';
 %n_lines = 10; %number of color lines to print out
 %colorname_code_generator(colorname,hex_color_string,n_lines)
 
@@ -33,7 +33,7 @@ B2=hex_color_string(6);
 
 RS_hex = sprintf('%s%s%s%s%s%s',G1,G2,B1,B2,R1,R2);
 
-starting_line = sprintf('PROGMEM const unsigned long %s[10][10]={\n',colorname);
+starting_line = sprintf('PROGMEM const unsigned long %s[10][10]={\n',color_name);
 ending_line = '};';
 
 %to repeat the same color across all LEDs
@@ -48,7 +48,14 @@ center_lines = sprintf('%s\n',center_line1);
 for n=1:(n_lines-1)
     center_lines = strcat(center_lines,sprintf('%s\n',center_line1));
 end
-
+%center_lines = strcat(center_lines,sprintf('\n'));
 %%%%now put it all together
 
-all_together = strcat(starting_line,center_lines,ending_line);
+all_together = strcat(starting_line,sprintf('%s\n',center_lines),ending_line);
+
+filename = sprintf('%s.txt',color_name);
+fid = fopen(filename,'w');
+
+fprintf(fid,'%s',all_together);
+
+fclose(fid);
